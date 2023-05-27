@@ -10,6 +10,8 @@ import { LocalStrategy } from 'src/auth/local.strategy';
 import { jwtConstants } from 'src/auth/constants';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 // const sequelizeConfig = require('./sequelize.config');
 
@@ -19,12 +21,12 @@ import { ConfigService } from '@nestjs/config';
       defaultStrategy: 'jwt',
     }),
     JwtModule.register({
-      // secret: String(process.env.APP_JWT_SECRET),
+      secret: jwtConstants.secret,
       signOptions: { expiresIn: '36060s' },
     }),
     SequelizeModule.forFeature([User]),
   ],
-  providers: [UserService, JwtStrategy],
+  providers: [UserService, JwtStrategy, RolesGuard],
   controllers: [UserController],
   exports: [PassportModule, JwtModule, JwtStrategy],
 })

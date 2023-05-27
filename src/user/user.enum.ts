@@ -13,3 +13,8 @@ export enum Salutation {
   MR = 'Mr.',
   MS = 'Ms.',
 }
+
+export enum Role {
+  User = 'user',
+  Admin = 'admin',
+}

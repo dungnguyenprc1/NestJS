@@ -8,7 +8,12 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { MembershipType, Salutation, StatusMembership } from './user.enum';
+import {
+  MembershipType,
+  Role,
+  Salutation,
+  StatusMembership,
+} from './user.enum';
 
 @Table
 export class User extends Model {
@@ -19,6 +24,9 @@ export class User extends Model {
 
   @Column({ allowNull: true })
   membershipType: MembershipType;
+
+  @Column({ defaultValue: Role.User })
+  roles: Role;
 
   @Column({ allowNull: true })
   status: StatusMembership;
@@ -71,6 +79,6 @@ export class User extends Model {
   @Column({ allowNull: true })
   nursesChapterId: number;
 
-  @Column({ defaultValue: DataType.NOW, allowNull: false })
+  @Column({ defaultValue: DataType.NOW })
   createdAt: Date;
 }
