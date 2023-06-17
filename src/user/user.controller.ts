@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Req,
   Request,
@@ -9,7 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from './dto/user.dto';
+import { LoginDto, UserDto } from './dto/user.dto';
 // import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -25,35 +26,40 @@ import {
 } from '@nestjs/swagger';
 import { TransformInterceptor } from 'src/shared/file/responses/interceptors.interceptor';
 import { ResponseMessage } from 'src/shared/file/responses/response_message.decorator';
-// import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { CrudRequestInterceptor } from '@nestjsx/crud';
 
 @ApiTags('Auth')
-@Controller('user')
+@Controller('api/app/authorize')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('/register')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Register' })
   signUp(@Body() userDto: UserDto): Promise<void> {
     return this.userService.createUser(userDto);
   }
+
   @Post('/login')
+  @HttpCode(200)
   @UseInterceptors(TransformInterceptor)
   @ApiOperation({
     summary: 'Login',
     description: 'Returns the media statistics for the user',
   })
   @ResponseMessage('Okeee')
-  // @ApiOkResponse({type: Standa})
-  signIn(@Body() userDto: UserDto) {
-    return this.userService.signIn(userDto);
+  signIn(@Body() loginDto: LoginDto) {
+    return this.userService.signIn(loginDto);
   }
+
   @Get('test')
   @ApiProperty()
   @ApiSecurity('jwt')
-  @Roles(Role.User)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseInterceptors(CrudRequestInterceptor)
+  // @Roles(Role.User)
+  @UseGuards(JwtAuthGuard)
   test(@Request() req) {
+    // console.log(process.env.)
     return req.user;
   }
 }

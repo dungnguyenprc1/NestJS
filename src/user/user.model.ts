@@ -8,12 +8,8 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import {
-  MembershipType,
-  Role,
-  Salutation,
-  StatusMembership,
-} from './user.enum';
+import { CurrentDiet, Gender, PetType } from './user.enum';
+import { Exclude } from 'class-transformer';
 
 @Table
 export class User extends Model {
@@ -22,63 +18,41 @@ export class User extends Model {
   @Column
   membershipId: string;
 
-  @Column({ allowNull: true })
-  membershipType: MembershipType;
+  @Column
+  petName: string;
 
-  @Column({ defaultValue: Role.User })
-  roles: Role;
+  @Column({ defaultValue: Gender.MALE })
+  gender: Gender;
 
-  @Column({ allowNull: true })
-  status: StatusMembership;
+  @Column({ defaultValue: PetType.CAT })
+  petType: PetType;
 
-  @Column({ allowNull: true })
-  salutation: Salutation;
+  @Column
+  breed: string;
 
-  @Column({ allowNull: true })
-  fullName: string;
+  @Column({ defaultValue: DataType.NOW })
+  birthDate: Date;
+
+  @Column
+  weight: number;
+
+  @Column
+  currentDiet: CurrentDiet;
+
+  @Column
+  preexistingConditions: string;
 
   @Column({ unique: true })
+  @Exclude({ toPlainOnly: true })
   email: string;
 
-  @Column({ allowNull: true })
-  mobilePhone: string;
-
-  @Column({ allowNull: true })
-  countryCode: string;
-
+  @Exclude({ toPlainOnly: true })
   @Column
   password: string;
 
-  @Column({ allowNull: true })
-  dateOfBirth: Date;
-
-  @Column({ allowNull: true })
-  designation: string;
-
-  @Column({ allowNull: true })
-  department: string;
-
-  @Column({ allowNull: true })
-  address: string;
-
-  @Column({ allowNull: true })
-  address2: string;
-
-  @Column({ allowNull: true })
-  postalCode: string;
-
-  @Column({ allowNull: true })
-  unitNo: string;
-
-  @Column({ allowNull: true })
-  sbnNo: string;
-
-  @Column({ allowNull: true })
-  country: string;
-
-  @Column({ allowNull: true })
-  nursesChapterId: number;
-
   @Column({ defaultValue: DataType.NOW })
   createdAt: Date;
+
+  @Column({ type: 'varchar', allowNull: true, unique: true })
+  refreshToken: string;
 }

@@ -1,12 +1,16 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Sequelize } from 'sequelize-typescript';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { TransformInterceptor } from './transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  // app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  app.useGlobalInterceptors(new TransformInterceptor());
   const config = new DocumentBuilder()
     .setTitle('SNA')
     .setDescription('The  API description')

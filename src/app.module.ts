@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { UserModule } from './user/user.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './user/user.model';
+import { load } from './configs';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: 'localhost',
@@ -16,7 +21,9 @@ import { User } from './user/user.model';
       synchronize: true,
     }),
     UserModule,
+    ProfilesModule,
   ],
+
   // controllers: [AppController],
   // providers: [AppService],
 })
